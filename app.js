@@ -4,6 +4,8 @@ const config = require('config');
 const mongoose = require('mongoose');
 
 require('./startup/db')();
+require('./startup/routes')(app);
+
 
 app.get('/', (req, res)=>{
     res.send("Hello World!");
