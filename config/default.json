@@ -1,3 +1,4 @@
 {
-    "db": "mongodb://localhost:27017/volunteering"
+    "db": "mongodb://localhost:27017/volunteering",
+    "jwtPrivateKey": ""
 }

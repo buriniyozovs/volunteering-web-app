@@ -1,5 +1,6 @@
 const mongoose =  require('mongoose');
 const Joi = require('joi');
+const userSchema = require('../models/user');
 
 const eventSchema = new mongoose.Schema({
     name: {
@@ -12,9 +13,9 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    contacts: {
-        type: String,
-        required: true
+    organizer: {
+        type: userSchema,
+
     }
 });
 
@@ -25,7 +26,8 @@ function validateEvent(event){
     const schema = {
         name: Joi.string().required().min(5).max(100),
         date: Joi.string().required().min(5).max(100),
-        contacts: Joi.string().required().min(5).max(100)
+        organizerId: Joi
+
     }
     return Joi.validate(event, schema);
 }
