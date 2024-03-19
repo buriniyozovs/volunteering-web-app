@@ -6,11 +6,14 @@ const organizerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    contacts: {
+    email: {
         type: String,
         required: true
     },
-
+    phoneNumber: {
+        type: String,
+        required: true
+    }
 });
 
 const Organizer = mongoose.model('Orginizer', organizerSchema);
@@ -18,7 +21,8 @@ const Organizer = mongoose.model('Orginizer', organizerSchema);
 function validateOrganizer(organizer){
     const schema = {
         name: Joi.string().required().min(3).max(100),
-        contacts: Joi.string().required().min(9).max(100)
+        email: Joi.string().required().min(9).max(100),
+        phoneNumber: Joi.string().required().min(9).max(100),
     }
     return Joi.validate(organizer, schema);
 }

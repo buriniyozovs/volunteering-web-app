@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Event, validate } = require('../models/event');
 const {User} = require('../models/user');
+const {Organizer} = require('../models/organizer');
 const auth = require('../middleware/auth');
 
 router.get('/', async (req, res) =>{
@@ -32,9 +33,16 @@ router.post('/', auth, async (req, res)=>{
             email: organizer.email,
             phoneNumber: organizer.phoneNumber,
         }
+    });
+    const new_organizer = new Organizer({
+        _id: organizer._id,
+        name: organizer.name,
+        email: organizer.email,
+        phoneNumber: organizer.phoneNumber
     })
     try {
         await event.save();
+        await new_organizer.save();
         res.send(event);
     } catch (err) {
         console.error('Error saving event:', err);
@@ -45,10 +53,16 @@ router.post('/', auth, async (req, res)=>{
     // res.send(event);
 });
 
-router.delete('/:id', async (req, res)=>{
-    const event = await Event.findByIdAndRemove(req.params.id);
+router.delete('/:id', auth, async (req, res)=>{
+    const organizer = await User.findById(req.user._id).select('-password');
+    if(!organizer) return res.status(404).send('User not found!');
 
+    const event = await Event.findById(req.params.id);
     if(!event) return res.status(404).send('Event not found!');
+
+    if(event.organizer._id.toString() !== organizer._id.toString()) return res.send('You can only your events!');
+
+    await event.remove();
 
     res.send(event);
 });
